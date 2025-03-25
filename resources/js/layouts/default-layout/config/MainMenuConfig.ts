@@ -42,6 +42,18 @@ const MainMenuConfig: Array<MenuItem> = [
                             },
                         ],
                     },
+                    {
+                        sectionTitle: "Antrian",
+                        route: "/antrian",
+                        name: "master-antrian",
+                        sub: [
+                            {
+                                heading: "Poli",
+                                name: "master-poli",
+                                route: "/dashboard/master/antrians/poli",
+                            },
+                        ]
+                    }
                 ],
             },
             {

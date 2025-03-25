@@ -111,11 +111,11 @@ function handleCheck(item: Item, event) {
     addedPermissions.push(item.value);
 
     // check if have parent
-    // const haveParent = findAllParents(permissions, item);
-    // if (haveParent.length > 1) {
-    //     haveParent.pop();
-    //     addedPermissions.push(...haveParent);
-    // }
+    const haveParent = findAllParents(permissions, item);
+    if (haveParent.length > 1) {
+        haveParent.pop();
+        addedPermissions.push(...haveParent);
+    }
 
     // check if have children
     if (item.children) {

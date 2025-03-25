@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PoliController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
@@ -47,6 +48,14 @@ Route::middleware(['auth', 'verified', 'json'])->group(function () {
             Route::post('roles', [RoleController::class, 'index']);
             Route::post('roles/store', [RoleController::class, 'store']);
             Route::apiResource('roles', RoleController::class)
+                ->except(['index', 'store']);
+        });
+
+        Route::middleware('can:master-poli')->group(function () {
+            Route::get('poli', [PoliController::class, 'get']);
+            Route::post('poli', [PoliController::class, 'index']);
+            Route::post('poli/store', [PoliController::class, 'store']);
+            Route::apiResource('poli', PoliController::class)
                 ->except(['index', 'store']);
         });
     });

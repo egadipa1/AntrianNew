@@ -313,7 +313,7 @@ const removeImage = () => {
                                 name="phone"
                                 class="form-control form-control-lg form-control-solid"
                                 placeholder="Phone number"
-                                v-model="profileDetails.contactPhone"
+                                v-model="profileDetails.phone"
                             />
                             <div class="fv-plugins-message-container">
                                 <div class="fv-help-block">

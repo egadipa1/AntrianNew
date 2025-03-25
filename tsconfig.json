@@ -12,7 +12,8 @@
         "paths": {
             "@/*": ["./resources/js/*"]
         },
-        "allowJs": true
+        "allowJs": true,
+        "outDir": "./dist" // Tambahkan baris ini untuk mengatur output directory
     },
     "exclude": ["node_modules", "dist"],
     "references": [
