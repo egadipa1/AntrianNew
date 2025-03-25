@@ -35,11 +35,19 @@ class UserController extends Controller
         $page = $request->page ? $request->page - 1 : 0;
 
         DB::statement('set @no=0+' . $page * $per);
-        $data = User::when($request->search, function (Builder $query, string $search) {
-            $query->where('name', 'like', "%$search%")
-                ->orWhere('email', 'like', "%$search%")
-                ->orWhere('phone', 'like', "%$search%");
-        })->latest()->paginate($per, ['*', DB::raw('@no := @no + 1 AS no')]);
+        $data = User::join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
+            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+            ->when($request->search, function (Builder $query, string $search) {
+            $query->where('users.name', 'like', "%$search%")
+                ->orWhere('users.email', 'like', "%$search%")
+                ->orWhere('users.phone', 'like', "%$search%")
+                ->orWhere('roles.name', 'like', "%$search%");
+        })->select('users.*', 'roles.name as roles_name')->latest()->paginate($per);
+
+        $no = ($data->currentPage() - 1) * $per + 1;
+        foreach ($data as $item) {
+            $item->no = $no++;
+        }
 
         return response()->json($data);
     }

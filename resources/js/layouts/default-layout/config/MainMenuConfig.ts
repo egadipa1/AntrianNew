@@ -40,6 +40,11 @@ const MainMenuConfig: Array<MenuItem> = [
                                 name: "master-user",
                                 route: "/dashboard/master/users",
                             },
+                            {
+                                heading: "Dokter",
+                                name: "master-dokter",
+                                route: "/dashboard/master/dokters",
+                            },
                         ],
                     },
                     {
@@ -53,7 +58,7 @@ const MainMenuConfig: Array<MenuItem> = [
                                 route: "/dashboard/master/antrians/poli",
                             },
                         ]
-                    }
+                    },
                 ],
             },
             {

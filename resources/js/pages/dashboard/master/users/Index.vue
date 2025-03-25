@@ -24,6 +24,9 @@ const columns = [
     column.accessor("email", {
         header: "Email",
     }),
+    column.accessor("roles_name", {
+        header: "Jabatan",
+    }),
     column.accessor("phone", {
         header: "No. Telp",
     }),
