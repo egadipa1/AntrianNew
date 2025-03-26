@@ -3,6 +3,7 @@ import { getAssetPath } from "@/core/helpers/assets";
 import { ref } from "vue";
 import { ErrorMessage, Field, Form as VForm } from "vee-validate";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import { useAuthStore } from "@/stores/auth";
 import * as Yup from "yup";
 
 interface ProfileDetails {
@@ -20,6 +21,7 @@ const submitButton5 = ref<HTMLElement | null>(null);
 const updateEmailButton = ref<HTMLElement | null>(null);
 const updatePasswordButton = ref<HTMLElement | null>(null);
 
+const store = useAuthStore();
 const emailFormDisplay = ref(false);
 const passwordFormDisplay = ref(false);
 
@@ -44,10 +46,10 @@ const changePassword = Yup.object().shape({
 });
 
 const profileDetails = ref<ProfileDetails>({
-    photo: getAssetPath("media/avatars/blank.png"),
-    name: "Max",
-    email: "Smith",
-    phone: "08899898734678",
+    photo: store.user.photo,
+    name: store.user.name,
+    email: store.user.email,
+    phone: store.user.phone,
 });
 
 const saveChanges1 = () => {
@@ -277,9 +279,9 @@ const removeImage = () => {
                         <div class="col-lg-8 fv-row">
                             <Field
                                 type="text"
-                                name="company"
+                                name="name"
                                 class="form-control form-control-lg form-control-solid"
-                                placeholder="Company name"
+                                placeholder="Your Name"
                                 v-model="profileDetails.name"
                             />
                             <div class="fv-plugins-message-container">
@@ -326,14 +328,14 @@ const removeImage = () => {
                     <!--end::Input group-->
 
                     <!--begin::Input group-->
-                    <div class="row mb-6">
-                        <!--begin::Label-->
+                    <!-- <div class="row mb-6">
+                        begin::Label
                         <label class="col-lg-4 col-form-label fw-semibold fs-6"
                             >Company Site</label
                         >
-                        <!--end::Label-->
+                        end::Label
 
-                        <!--begin::Col-->
+                        begin::Col
                         <div class="col-lg-8 fv-row">
                             <Field
                                 type="text"
@@ -348,13 +350,13 @@ const removeImage = () => {
                                 </div>
                             </div>
                         </div>
-                        <!--end::Col-->
-                    </div>
+                        end::Col
+                    </div> -->
                     <!--end::Input group-->
 
                     <!--begin::Input group-->
-                    <div class="row mb-6">
-                        <!--begin::Label-->
+                    <!-- <div class="row mb-6">
+                        begin::Label
                         <label class="col-lg-4 col-form-label fw-semibold fs-6">
                             <span class="required">Country</span>
 
@@ -364,9 +366,9 @@ const removeImage = () => {
                                 title="Country of origination"
                             ></i>
                         </label>
-                        <!--end::Label-->
+                        end::Label
 
-                        <!--begin::Col-->
+                        begin::Col
                         <div class="col-lg-8 fv-row">
                             <Field
                                 as="select"
@@ -690,8 +692,8 @@ const removeImage = () => {
                                 </div>
                             </div>
                         </div>
-                        <!--end::Col-->
-                    </div>
+                        end::Col
+                    </div> -->
                     <!--end::Input group-->
 
                     <!--begin::Input group-->
@@ -1601,7 +1603,7 @@ const removeImage = () => {
                     >
                         <div class="fs-4 fw-bolder mb-1">Email Address</div>
                         <div class="fs-6 fw-semibold text-gray-600">
-                            support@keenthemes.com
+                            {{ profileDetails.email }}
                         </div>
                     </div>
 
@@ -1632,7 +1634,7 @@ const removeImage = () => {
                                             id="emailaddress"
                                             placeholder="Email Address"
                                             name="emailaddress"
-                                            value="support@keenthemes.com"
+                                            v-model="profileDetails.email"
                                         />
                                         <div
                                             class="fv-plugins-message-container"
