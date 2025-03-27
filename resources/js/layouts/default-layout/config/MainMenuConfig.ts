@@ -43,7 +43,7 @@ const MainMenuConfig: Array<MenuItem> = [
                             {
                                 heading: "Dokter",
                                 name: "master-dokter",
-                                route: "/dashboard/master/dokters",
+                                route: "/dashboard/master/users/dokter",
                             },
                         ],
                     },

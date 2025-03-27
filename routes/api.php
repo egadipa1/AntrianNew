@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PoliController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DokterController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SettingController;
@@ -56,6 +57,14 @@ Route::middleware(['auth', 'verified', 'json'])->group(function () {
             Route::post('poli', [PoliController::class, 'index']);
             Route::post('poli/store', [PoliController::class, 'store']);
             Route::apiResource('poli', PoliController::class)
+                ->except(['index', 'store']);
+        });
+
+        Route::middleware('can:master-dokter')->group(function () {
+            Route::get('dokter', [DokterController::class, 'get']);
+            Route::post('dokter', [DokterController::class, 'index']);
+            Route::post('dokter/store', [DokterController::class, 'store']);
+            Route::apiResource('dokter', DokterController::class)
                 ->except(['index', 'store']);
         });
     });

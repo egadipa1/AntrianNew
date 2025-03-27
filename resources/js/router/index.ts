@@ -74,6 +74,16 @@ const routes: Array<RouteRecordRaw> = [
                 },
             },
             {
+                path: "/dashboard/master/users/dokter",
+                name: "dashboard.master.users.dokter",
+                component: () =>
+                    import("@/pages/dashboard/master/users/dokter/Index.vue"),
+                meta: {
+                    pageTitle: "Dokter",
+                    breadcrumbs: ["Master", "Users", "Dokter"],
+                },
+            },
+            {
                 path: "/dashboard/master/antrians/poli",
                 name: "dashboard.master.antrians",
                 component: () =>
