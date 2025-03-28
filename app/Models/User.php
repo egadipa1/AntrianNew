@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\UserRoleUpdated;
 use App\Traits\Uuid;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -50,6 +51,10 @@ class User extends Authenticatable implements JWTSubject
 
     protected static function booted()
     {
+        static::saved(function ($user) {
+            $user->refresh();
+            event(new UserRoleUpdated($user));
+        });
         static::deleted(function ($user) {
             if ($user->photo != null && $user->photo != '') {
                 $old_photo = str_replace('/storage/', '', $user->photo);
@@ -86,5 +91,10 @@ class User extends Authenticatable implements JWTSubject
     public function getPermissionAttribute()
     {
         return $this->getAllPermissions()->pluck('name');
+    }
+
+    public function dokter()
+    {
+        return $this->hasOne(Dokter::class, 'dokter_id');
     }
 }

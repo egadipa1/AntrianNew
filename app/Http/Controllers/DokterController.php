@@ -2,27 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
-use App\Models\Role;
+use App\Models\Dokter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 
-class UserController extends Controller
+class DokterController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function get(Request $request)
     {
         return response()->json([
             'success' => true,
-            'data' => User::when($request->role_id, function (Builder $query, string $role_id) {
-                $query->role($role_id);
-            })->get()
+            'data' => Dokter::all()
         ]);
     }
 
@@ -35,15 +26,17 @@ class UserController extends Controller
         $page = $request->page ? $request->page - 1 : 0;
 
         DB::statement('set @no=0+' . $page * $per);
-        $data = User::join('model_has_roles', 'users.id', '=', 'model_has_roles.model_id')
-            ->join('roles', 'model_has_roles.role_id', '=', 'roles.id')
+        $data = Dokter::
+            join('users', 'users.id', '=', 'dokters.dokter_id')
+            ->leftJoin('polis', 'polis.id', '=', 'dokters.poli_id')
             ->when($request->search, function (Builder $query, string $search) {
             $query->where('users.name', 'like', "%$search%")
                 ->orWhere('users.email', 'like', "%$search%")
-                ->orWhere('users.phone', 'like', "%$search%")
-                ->orWhere('roles.name', 'like', "%$search%");
-        })->select('users.*', 'roles.name as roles_name')->latest()->paginate($per);
-
+                ->orWhere('polis.name', 'like', "%$search%");
+        })->select('users.*', 'polis.name as polis_name')->latest()->paginate($per);
+        foreach ($data as $item) {
+            $item->polis_name = $item->polis_name ?: 'Belum Diatur';
+        }
         $no = ($data->currentPage() - 1) * $per + 1;
         foreach ($data as $item) {
             $item->no = $no++;
@@ -64,15 +57,9 @@ class UserController extends Controller
         }
 
         $user = User::create($validatedData);
-        
+
         $role = Role::findById($validatedData['role_id']);
         $user->assignRole($role);
-        /*
-            Trouble Yang Belum Terselesaikan
-            - Penduplikasian Create Dengan Update
-            - Create Mentrigger Saved Pada Model User, Meski Role Belum Terdata        
-        */ 
-        $user->update($validatedData);
 
         return response()->json([
             'success' => true,
@@ -110,11 +97,10 @@ class UserController extends Controller
             }
         }
 
-        $role = Role::findById($validatedData['role_id']);
-        $user->syncRoles($role);
-
         $user->update($validatedData);
 
+        $role = Role::findById($validatedData['role_id']);
+        $user->syncRoles($role);
 
         return response()->json([
             'success' => true,

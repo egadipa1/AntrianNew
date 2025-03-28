@@ -24,13 +24,10 @@ const columns = [
     column.accessor("email", {
         header: "Email",
     }),
-    column.accessor("roles_name", {
-        header: "Jabatan",
+    column.accessor("polis_name", {
+        header: "Poliklinik",
     }),
-    column.accessor("phone", {
-        header: "No. Telp",
-    }),
-    column.accessor("uuid", {
+    column.accessor("id", {
         header: "Aksi",
         cell: (cell) =>
             h("div", { class: "d-flex gap-2" }, [
@@ -78,7 +75,7 @@ watch(openForm, (val) => {
 
     <div class="card">
         <div class="card-header align-items-center">
-            <h2 class="mb-0">List Users</h2>
+            <h2 class="mb-0">List Dokter</h2>
             <button
                 type="button"
                 class="btn btn-sm btn-primary ms-auto"
@@ -92,8 +89,8 @@ watch(openForm, (val) => {
         <div class="card-body">
             <paginate
                 ref="paginateRef"
-                id="table-users"
-                url="/master/users"
+                id="table-dokters"
+                url="/master/dokter"
                 :columns="columns"
             ></paginate>
         </div>

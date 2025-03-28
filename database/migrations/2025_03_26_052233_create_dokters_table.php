@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('dokter_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('poli_id')->nullable()->constrained('polis')->onDelete('set null');
+            $table->foreignId('ruangan_id')->nullable()->constrained('ruangans')->onDelete('set null');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('nonaktif');
             $table->timestamps();
         });
     }
