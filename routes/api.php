@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DokterController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\RuanganController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +31,7 @@ Route::prefix('setting')->group(function () {
     Route::get('', [SettingController::class, 'index']);
 });
 
-Route::middleware(['auth', 'verified', 'json'])->group(function () {
+// Route::middleware(['auth', 'verified', 'json'])->group(function () {
     Route::prefix('setting')->middleware('can:setting')->group(function () {
         Route::post('', [SettingController::class, 'update']);
     });
@@ -52,20 +53,28 @@ Route::middleware(['auth', 'verified', 'json'])->group(function () {
                 ->except(['index', 'store']);
         });
 
-        Route::middleware('can:master-poli')->group(function () {
-            Route::get('poli', [PoliController::class, 'get']);
+        Route::middleware('can:poli')->group(function () {
+            Route::get('poli', [PoliController::class, 'get'])->withoutMiddleware('can:poli');
             Route::post('poli', [PoliController::class, 'index']);
             Route::post('poli/store', [PoliController::class, 'store']);
             Route::apiResource('poli', PoliController::class)
                 ->except(['index', 'store']);
         });
-
-        Route::middleware('can:master-dokter')->group(function () {
-            Route::get('dokter', [DokterController::class, 'get']);
-            Route::post('dokter', [DokterController::class, 'index']);
-            Route::post('dokter/store', [DokterController::class, 'store']);
-            Route::apiResource('dokter', DokterController::class)
+        
+        Route::middleware('can:ruangan')->group(function () {
+            Route::get('ruangan', [RuanganController::class, 'get'])->withoutMiddleware('can:ruangan');
+            Route::post('ruangan', [RuanganController::class, 'index']);
+            Route::post('ruangan/store', [RuanganController::class, 'store']);
+            Route::apiResource('ruangan', RuanganController::class)
                 ->except(['index', 'store']);
         });
+
+        // Route::middleware('can:master-dokter')->group(function () {
+            Route::get('dokter', [DokterController::class, 'get']);
+            Route::post('dokter', [DokterController::class, 'index']);
+            // Route::post('dokter/store', [DokterController::class, 'store']);
+            Route::apiResource('dokter', DokterController::class)
+                ->except(['index', 'store']);
+        // });
     });
-});
+// });

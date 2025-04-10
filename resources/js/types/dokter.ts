@@ -1,7 +1,6 @@
-export interface Role {
+export interface Dokter {
     id: BigInteger;
-    name: string;
-    full_name: string;
-    guard_name: string;
-    permissions?: Array<string>;
+    dokter_id: BigInteger;
+    poli_id: BigInteger;
+    ruangan_id: BigInteger;
 }

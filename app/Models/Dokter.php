@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\DokterStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,20 +12,19 @@ class Dokter extends Model
 
     protected $table = 'dokters';
 
-    protected $fillable = ['dokter_id', 'poli_id'];
+    protected $fillable = ['dokter_id', 'poli_id','ruangan_id', 'status'];
+
+    public static function booted(){
+        static::saved(function($dokter){
+            event(new DokterStatus($dokter));
+        });
+    }
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function poli()
-    {
-        return $this->belongsTo(Poli::class);
-    }
-
-    public function ruangan()
-    {
-        return $this->belongsTo(Ruangan::class);
-    }
+    
+    
 }

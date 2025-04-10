@@ -6,6 +6,7 @@ use App\Models\Dokter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DokterController extends Controller
 {
@@ -24,18 +25,18 @@ class DokterController extends Controller
     {
         $per = $request->per ?? 10;
         $page = $request->page ? $request->page - 1 : 0;
-
-        DB::statement('set @no=0+' . $page * $per);
-        $data = Dokter::
-            join('users', 'users.id', '=', 'dokters.dokter_id')
+    
+        $data = Dokter::join('users', 'users.id', '=', 'dokters.dokter_id')
             ->leftJoin('polis', 'polis.id', '=', 'dokters.poli_id')
+            ->leftJoin('ruangans', 'ruangans.id', '=', 'dokters.ruangan_id')
             ->when($request->search, function (Builder $query, string $search) {
             $query->where('users.name', 'like', "%$search%")
                 ->orWhere('users.email', 'like', "%$search%")
                 ->orWhere('polis.name', 'like', "%$search%");
-        })->select('users.*', 'polis.name as polis_name')->latest()->paginate($per);
+        })->select('users.*', 'polis.name as polis_name', 'ruangans.ruang as ruang', 'dokters.status', 'dokters.id as dokter_id')->latest()->paginate($per);
         foreach ($data as $item) {
             $item->polis_name = $item->polis_name ?: 'Belum Diatur';
+            $item->ruang = $item->ruang ?: 'Belum Diatur';
         }
         $no = ($data->currentPage() - 1) * $per + 1;
         foreach ($data as $item) {
@@ -48,63 +49,38 @@ class DokterController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request)
-    {
-        $validatedData = $request->validated();
-
-        if ($request->hasFile('photo')) {
-            $validatedData['photo'] = $request->file('photo')->store('photo', 'public');
-        }
-
-        $user = User::create($validatedData);
-
-        $role = Role::findById($validatedData['role_id']);
-        $user->assignRole($role);
-
-        return response()->json([
-            'success' => true,
-            'user' => $user
-        ]);
-    }
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Dokter $dokter)
     {
-        $user['role_id'] = $user?->role?->id;
+        $dokter['poli_id'] = $dokter?->poli_id;
+        $dokter['ruangan_id'] = $dokter?->ruangan_id;
+
+        Log::info($dokter);
+
         return response()->json([
-            'user' => $user
+            'dokter' => $dokter
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(Request $request, Dokter $dokter)
     {
-        $validatedData = $request->validated();
+        $poli = $request->poli_id;
+        $ruangan = $request->ruangan_id;
 
-        if ($request->hasFile('photo')) {
-            if ($user->photo) {
-                Storage::disk('public')->delete($user->photo);
-            }
-            $validatedData['photo'] = $request->file('photo')->store('photo', 'public');
-        } else {
-            if ($user->photo) {
-                Storage::disk('public')->delete($user->photo);
-                $validatedData['photo'] = null;
-            }
-        }
-
-        $user->update($validatedData);
-
-        $role = Role::findById($validatedData['role_id']);
-        $user->syncRoles($role);
+        // dd($poli,$ruangan);
+        $dokter->update([
+            'poli_id' => $poli,
+            'ruangan_id' => $ruangan,
+        ]);
 
         return response()->json([
             'success' => true,
-            'user' => $user
         ]);
     }
 

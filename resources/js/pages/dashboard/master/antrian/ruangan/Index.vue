@@ -3,14 +3,14 @@ import { h, ref, watch } from "vue";
 import { useDelete } from "@/libs/hooks";
 import Form from "./Form.vue";
 import { createColumnHelper } from "@tanstack/vue-table";
-import type { Dokter } from "@/types";
+import type { Ruangan } from "@/types";
 
-const column = createColumnHelper<Dokter>();
+const column = createColumnHelper<Ruangan>();
 const paginateRef = ref<any>(null);
 const selected = ref<string>("");
 const openForm = ref<boolean>(false);
 
-const { delete: deleteUser } = useDelete({
+const { delete: deletePoli } = useDelete({
     onSuccess: () => paginateRef.value.refetch(),
 });
 
@@ -18,53 +18,35 @@ const columns = [
     column.accessor("no", {
         header: "#",
     }),
-    column.accessor("name", {
-        header: "Nama",
-    }),
-    column.accessor("email", {
-        header: "Email",
-    }),
-    column.accessor("polis_name", {
-        header: "Poliklinik",
-    }),
     column.accessor("ruang", {
-        header: "Ruangan",
+        header: "Ruang",
     }),
-    column.accessor("status", {
-        header: "Status",
-        cell: (cell) =>
-            h("div", { class: "d-flex" }, [
-                h(
-                    "button",
-                    {
-                        class: `btn btn-sm ${
-                            cell.getValue() === "Aktif" ? "btn-success" :
-                            cell.getValue() === "Nonaktif" ? "btn-danger" :
-                            cell.getValue() === "Menunggu" ? "btn-warning" :
-                            ""
-                        }`,
-                    },
-                    h("h", cell.getValue())
-                ),
-            ]),
+    column.accessor("lantai", {
+        header: "Lantai",
     }),
-    column.accessor("dokter_id", {
+    column.accessor("id", {
         header: "Aksi",
         cell: (cell) =>
-        
             h("div", { class: "d-flex gap-2" }, [
                 h(
                     "button",
                     {
                         class: "btn btn-sm btn-icon btn-info",
                         onClick: () => {
-                            console.log("Full row:", cell.row.original);
                             selected.value = cell.getValue();
-                            console.log(cell.getValue());
                             openForm.value = true;
                         },
                     },
                     h("i", { class: "la la-pencil fs-2" })
+                ),
+                h(
+                    "button",
+                    {
+                        class: "btn btn-sm btn-icon btn-danger",
+                        onClick: () =>
+                            deletePoli(`/master/ruangan/${cell.getValue()}`),
+                    },
+                    h("i", { class: "la la-trash fs-2" })
                 ),
             ]),
     }),
@@ -90,7 +72,7 @@ watch(openForm, (val) => {
 
     <div class="card">
         <div class="card-header align-items-center">
-            <h2 class="mb-0">List Dokter</h2>
+            <h2 class="mb-0">List Ruangan</h2>
             <button
                 type="button"
                 class="btn btn-sm btn-primary ms-auto"
@@ -104,8 +86,8 @@ watch(openForm, (val) => {
         <div class="card-body">
             <paginate
                 ref="paginateRef"
-                id="table-dokters"
-                url="/master/dokter"
+                id="table-ruangan"
+                url="/master/ruangan"
                 :columns="columns"
             ></paginate>
         </div>

@@ -72,7 +72,7 @@ function submit() {
     if (props.selected) {
         formData.append("_method", "PUT");
     }
-
+    console.log(formData.getAll)
     block(document.getElementById("form-user"));
     axios({
         method: "post",

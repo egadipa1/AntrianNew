@@ -50,14 +50,19 @@ const MainMenuConfig: Array<MenuItem> = [
                     {
                         sectionTitle: "Antrian",
                         route: "/antrian",
-                        name: "master-antrian",
+                        name: "antrian",
                         sub: [
                             {
                                 heading: "Poli",
-                                name: "master-poli",
+                                name: "poli",
                                 route: "/dashboard/master/antrians/poli",
                             },
-                        ]
+                            {
+                                heading: "Ruangan",
+                                name: "ruangan",
+                                route: "/dashboard/master/ruangans",
+                            },
+                        ],
                     },
                 ],
             },

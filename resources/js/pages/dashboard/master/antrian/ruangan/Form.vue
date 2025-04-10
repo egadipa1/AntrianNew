@@ -4,10 +4,8 @@ import { onMounted, ref, watch, computed } from "vue";
 import * as Yup from "yup";
 import axios from "@/libs/axios";
 import { toast } from "vue3-toastify";
-import type { Poli, Dokter, Ruangan } from "@/types";
+import type { Ruangan } from "@/types";
 import ApiService from "@/core/services/ApiService";
-import { usePoli } from "@/services/usePoli";
-import { useRuangan } from "@/services/useRuangan";
 
 const props = defineProps({
     selected: {
@@ -16,47 +14,45 @@ const props = defineProps({
     },
 });
 
+const ruangan = ref<Ruangan>({} as Ruangan);
 const emit = defineEmits(["close", "refresh"]);
-
-const dokter = ref<Dokter>({} as Dokter);
 const formRef = ref();
 
-// const formSchema = Yup.object().shape({
-//     poli_id: Yup.string().required("Poliklinik harus diisi"),
-//     ruangan_id: Yup.string().required("Ruangan harus diisi"),
-// });
+const formSchema = Yup.object().shape({
+    ruang: Yup.number().required("Nama harus diisi"),
+    lantai: Yup.number().required("Deskripsi harus diisi"),
+});
 
-function getEdit() {
-    block(document.getElementById("form-user"));
-    ApiService.get("master/dokter", props.selected)
+function getEdit(){
+    block(document.getElementById("form-role"));
+    ApiService.get("master/ruangan", props.selected)
         .then(({ data }) => {
-            dokter.value = data.dokter;
+            ruangan.value = data.data;
         })
         .catch((err: any) => {
             toast.error(err.response.data.message);
         })
         .finally(() => {
-            unblock(document.getElementById("form-user"));
+            unblock(document.getElementById("form-role"));
         });
 }
 
-function submit() {
+function submit(){
+
     const formData = new FormData();
-    formData.append("poli_id", dokter.value.poli_id.toString());
-    formData.append("ruangan_id", dokter.value.ruangan_id.toString());
+    formData.append("ruang", ruangan.value.ruang.toString());
+    formData.append("lantai", ruangan.value.lantai.toString());
 
     if (props.selected) {
         formData.append("_method", "PUT");
     }
 
-    block(document.getElementById("form-user"));
-    console.log(formData.get("poli"));
-    console.log(formData.get("ruangan"));
+    block(document.getElementById("form-ruangan"));
     axios({
         method: "post",
         url: props.selected
-            ? `/master/dokter/${props.selected}`
-            : "/master/dokter/store",
+            ? `/master/ruangan/${props.selected}`
+            : "/master/ruangan/store",
         data: formData,
         headers: {
             "Content-Type": "multipart/form-data",
@@ -73,28 +69,14 @@ function submit() {
             toast.error(err.response.data.message);
         })
         .finally(() => {
-            unblock(document.getElementById("form-user"));
+            unblock(document.getElementById("form-ruangan"));
         });
 }
 
-const poli = usePoli();
-const polis = computed(() =>
-    poli.data.value?.map((item: Poli) => ({
-        id: item.id,
-        text: item.name,
-    }))
-);
-
-const ruangan = useRuangan();
-const ruangans = computed(() =>
-    ruangan.data.value?.map((item: Ruangan) => ({
-        id: item.id,
-        text: item.ruang,
-    }))
-);
 
 onMounted(async () => {
     if (props.selected) {
+        console.log("selected", props.selected);
         getEdit();
     }
 });
@@ -113,11 +95,12 @@ watch(
     <VForm
         class="form card mb-10"
         @submit="submit"
-        id="form-user"
+        :validation-schema="formSchema"
+        id="form-ruangan"
         ref="formRef"
     >
         <div class="card-header align-items-center">
-            <h2 class="mb-0">{{ selected ? "Edit" : "Tambah" }} Dokter</h2>
+            <h2 class="mb-0">{{ selected ? "Edit" : "Tambah" }} Ruangan</h2>
             <button
                 type="button"
                 class="btn btn-sm btn-light-danger ms-auto"
@@ -133,25 +116,19 @@ watch(
                     <!--begin::Input group-->
                     <div class="fv-row mb-7">
                         <label class="form-label fw-bold fs-6 required">
-                            Poliklinik
+                            Ruang
                         </label>
                         <Field
-                            name="poli_id"
-                            type="hidden"
-                            v-model="dokter.poli_id"
-                        >
-                            <select2
-                                placeholder="Pilih role"
-                                class="form-select-solid"
-                                :options="polis"
-                                name="poli_id"
-                                v-model="dokter.poli_id"
-                            >
-                            </select2>
-                        </Field>
+                            class="form-control form-control-lg form-control-solid"
+                            type="number"
+                            name="ruang"
+                            autocomplete="off"
+                            v-model="ruangan.ruang"
+                            placeholder="Masukkan Ruang"
+                        />
                         <div class="fv-plugins-message-container">
                             <div class="fv-help-block">
-                                <ErrorMessage name="role_id" />
+                                <ErrorMessage name="ruang" />
                             </div>
                         </div>
                     </div>
@@ -161,25 +138,19 @@ watch(
                     <!--begin::Input group-->
                     <div class="fv-row mb-7">
                         <label class="form-label fw-bold fs-6 required">
-                            Ruangan
+                            Lantai
                         </label>
                         <Field
-                            name="ruangan_id"
-                            type="hidden"
-                            v-model="dokter.ruangan_id"
-                        >
-                            <select2
-                                placeholder="Pilih role"
-                                class="form-select-solid"
-                                :options="ruangans"
-                                name="ruangan_id"
-                                v-model="dokter.ruangan_id"
-                            >
-                            </select2>
-                        </Field>
+                            class="form-control form-control-lg form-control-solid"
+                            type="number"
+                            name="lantai"
+                            autocomplete="off"
+                            placeholder="Masukkan Lantai"
+                            v-model="ruangan.lantai"
+                        />
                         <div class="fv-plugins-message-container">
                             <div class="fv-help-block">
-                                <ErrorMessage name="ruangan_id" />
+                                <ErrorMessage name="lantai" />
                             </div>
                         </div>
                     </div>

@@ -14,7 +14,7 @@
             </form>
         </div>
         <div class="table-responsive" style="margin-top: -8rem">
-            <table class="table table-rounded table-hover table-striped border gy-7 gs-7" style="margin: 8rem 0;">
+            <table class="table table-rounded table-hover table-striped border gy-7 gs-7 align-items-center" style="margin: 8rem 0;">
                 <thead class="bg-gray-200">
                     <tr class="fw-bolder fs-6 text-gray-800 border-bottom border-gray-200"
                         v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
@@ -28,7 +28,7 @@
                     <template v-if="!!data?.data?.length">
                         <tr v-for="row in table.getRowModel().rows" :key="`row.${row.original.uuid}`">
                             <td v-for="cell in row.getVisibleCells()" :key="`cell.${cell.id}.${cell.row.original.uuid}`"
-                                class="py-4">
+                                class="py-4 align-middle">
                                 <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
                             </td>
                         </tr>
@@ -102,7 +102,7 @@ export default defineComponent({
         enabled: {
             type: Boolean,
             default: true
-        }
+        },
     },
     components: {
         FlexRender
