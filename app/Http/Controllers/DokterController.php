@@ -33,7 +33,7 @@ class DokterController extends Controller
             $query->where('users.name', 'like', "%$search%")
                 ->orWhere('users.email', 'like', "%$search%")
                 ->orWhere('polis.name', 'like', "%$search%");
-        })->select('users.*', 'polis.name as polis_name', 'ruangans.ruang as ruang', 'dokters.status', 'dokters.id as dokter_id')->latest()->paginate($per);
+        })->select('users.*', 'polis.name as polis_name', 'ruangans.ruang as ruang', 'dokters.status', 'dokters.id as dokter_id','dokters.jumlah_melayani')->latest()->paginate($per);
         foreach ($data as $item) {
             $item->polis_name = $item->polis_name ?: 'Belum Diatur';
             $item->ruang = $item->ruang ?: 'Belum Diatur';
