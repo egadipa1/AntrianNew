@@ -27,7 +27,7 @@ const columns = [
     column.accessor("id", {
         header: "Aksi",
         cell: (cell) =>
-            h("div", { class: "d-flex gap-2" }, [
+            h("div", { class: "d-flex justify-content-center gap-2" }, [
                 h(
                     "button",
                     {
