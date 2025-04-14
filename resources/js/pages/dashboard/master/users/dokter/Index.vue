@@ -10,10 +10,6 @@ const paginateRef = ref<any>(null);
 const selected = ref<string>("");
 const openForm = ref<boolean>(false);
 
-const { delete: deleteUser } = useDelete({
-    onSuccess: () => paginateRef.value.refetch(),
-});
-
 const columns = [
     column.accessor("no", {
         header: "#",
@@ -30,10 +26,13 @@ const columns = [
     column.accessor("ruang", {
         header: "Ruangan",
     }),
+    column.accessor("jumlah_melayani", {
+        header: "Jumlah Melayani",
+    }),
     column.accessor("status", {
         header: "Status",
         cell: (cell) =>
-            h("div", { class: "d-flex" }, [
+            h("div", { class: "d-flex justify-content-center" }, [
                 h(
                     "button",
                     {
@@ -52,7 +51,7 @@ const columns = [
         header: "Aksi",
         cell: (cell) =>
         
-            h("div", { class: "d-flex gap-2" }, [
+            h("div", { class: "d-flex justify-content-center gap-2" }, [
                 h(
                     "button",
                     {
