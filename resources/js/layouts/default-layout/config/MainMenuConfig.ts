@@ -67,6 +67,12 @@ const MainMenuConfig: Array<MenuItem> = [
                 ],
             },
             {
+                heading: "Menu Dokter",
+                route: "/dashboard/dokter",
+                name: "menu-dokter",
+                keenthemesIcon: "setting-2",
+            },
+            {
                 heading: "Setting",
                 route: "/dashboard/setting",
                 name: "setting",

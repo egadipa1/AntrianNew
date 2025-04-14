@@ -31,7 +31,7 @@ Route::prefix('setting')->group(function () {
     Route::get('', [SettingController::class, 'index']);
 });
 
-// Route::middleware(['auth', 'verified', 'json'])->group(function () {
+Route::middleware(['auth', 'verified', 'json'])->group(function () {
     Route::prefix('setting')->middleware('can:setting')->group(function () {
         Route::post('', [SettingController::class, 'update']);
     });
@@ -69,12 +69,12 @@ Route::prefix('setting')->group(function () {
                 ->except(['index', 'store']);
         });
 
-        // Route::middleware('can:master-dokter')->group(function () {
+        Route::middleware('can:master-dokter')->group(function () {
             Route::get('dokter', [DokterController::class, 'get']);
             Route::post('dokter', [DokterController::class, 'index']);
             // Route::post('dokter/store', [DokterController::class, 'store']);
             Route::apiResource('dokter', DokterController::class)
                 ->except(['index', 'store']);
-        // });
+        });
     });
-// });
+});

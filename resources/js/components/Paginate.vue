@@ -18,7 +18,7 @@
                 <thead class="bg-gray-200">
                     <tr class="fw-bolder fs-6 text-gray-800 border-bottom border-gray-200"
                         v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
-                        <th v-for="header in headerGroup.headers" :key="header.id" class="py-4">
+                        <th v-for="header in headerGroup.headers" :key="header.id" class="py-4 align-middle text-center">
                             <FlexRender :render="header.isPlaceholder ? null : header.column.columnDef.header"
                                 :props="header.getContext()" />
                         </th>
@@ -28,7 +28,7 @@
                     <template v-if="!!data?.data?.length">
                         <tr v-for="row in table.getRowModel().rows" :key="`row.${row.original.uuid}`">
                             <td v-for="cell in row.getVisibleCells()" :key="`cell.${cell.id}.${cell.row.original.uuid}`"
-                                class="py-4 align-middle">
+                                class="py-4 align-middle text-center">
                                 <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
                             </td>
                         </tr>

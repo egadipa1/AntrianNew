@@ -51,6 +51,15 @@ const routes: Array<RouteRecordRaw> = [
                     breadcrumbs: ["Website", "Setting"],
                 },
             },
+            {
+                path: "/dashboard/dokter",
+                name: "dashboard.dokter",
+                component: () => import("@/pages/dashboard/dokter/Index.vue"),
+                meta: {
+                    pageTitle: "Dashboard Dokter",
+                    breadcrumbs: ["Website", "Dokter"],
+                },
+            },
 
             // MASTER
             {
