@@ -20,6 +20,7 @@ import { initInlineSvg } from "@/core/plugins/inline-svg";
 import { initVeeValidate } from "@/core/plugins/vee-validate";
 import { initKtIcon } from "@/core/plugins/keenthemes";
 
+import vuetify from "./plugins/vuetify";
 import { vue3Debounce } from "vue-debounce";
 import { VueQueryPlugin, QueryClient } from "@tanstack/vue-query";
 import { useThemeStore } from "./stores/theme";
@@ -106,7 +107,7 @@ initKtIcon(app);
 initVeeValidate();
 
 app.use(i18n);
-
+app.use(vuetify);
 app.directive("tooltip", (el) => {
     new Tooltip(el);
 });
