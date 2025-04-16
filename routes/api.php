@@ -3,6 +3,7 @@
 use App\Http\Controllers\PoliController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DokterController;
+use App\Http\Controllers\MenuDokterController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\RuanganController;
@@ -74,6 +75,16 @@ Route::middleware(['auth', 'verified', 'json'])->group(function () {
             Route::post('dokter', [DokterController::class, 'index']);
             // Route::post('dokter/store', [DokterController::class, 'store']);
             Route::apiResource('dokter', DokterController::class)
+                ->except(['index', 'store']);
+        });
+    });
+    
+    Route::prefix('menu-dokter')->group(function () {
+        Route::middleware('can:menu-dokter')->group(function () {
+            Route::get('dokter', [MenuDokterController::class, 'get']);
+            Route::post('dokter', [MenuDokterController::class, 'index']);
+            Route::post('dokter/store', [MenuDokterController::class, 'store']);
+            Route::apiResource('dokter', MenuDokterController::class)
                 ->except(['index', 'store']);
         });
     });
